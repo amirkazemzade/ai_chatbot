@@ -1,5 +1,5 @@
-from models import *
-from provider import Provider
+from .models import *
+from .provider import Provider
 
 
 class Repository:
@@ -27,8 +27,8 @@ class Repository:
         return self.provider.fetch_user_by_index_id(index_id)
 
     # request functions
-    def insert_request(self, req: str, created_by: int = None) -> int:
-        return self.provider.insert_request(req, created_by)
+    def insert_request(self, req: str, created_by: int = None, length: float = None) -> int:
+        return self.provider.insert_request(req, created_by, length)
 
     def fetch_all_requests(self) -> list[RequestModel]:
         return self.provider.fetch_all_requests()
