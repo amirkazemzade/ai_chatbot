@@ -1,9 +1,7 @@
 import sqlite3
 
-from ai_chatbot.datasource.models.RequestModel import RequestModel
-from ai_chatbot.datasource.models.ResponseModel import ResponseModel
-from ai_chatbot.datasource.models.ShopListModel import ShopListModel
-from ai_chatbot.datasource.models.UserModel import UserModel
+from models import *
+from models.user_model import UserModel
 
 
 class Provider:

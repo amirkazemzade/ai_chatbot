@@ -1,8 +1,5 @@
-from ai_chatbot.datasource.models.RequestModel import RequestModel
-from ai_chatbot.datasource.models.ResponseModel import ResponseModel
-from ai_chatbot.datasource.models.ShopListModel import ShopListModel
-from ai_chatbot.datasource.models.UserModel import UserModel
-from ai_chatbot.datasource.provider import Provider
+from models import *
+from provider import Provider
 
 
 class Repository:
