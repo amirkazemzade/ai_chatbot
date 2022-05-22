@@ -1,14 +1,12 @@
 import sqlite3
 
-from ai_chatbot.datasource.models.RequestModel import RequestModel
-from ai_chatbot.datasource.models.ResponseModel import ResponseModel
-from ai_chatbot.datasource.models.ShopListModel import ShopListModel
-from ai_chatbot.datasource.models.UserModel import UserModel
+from constants import ROOT_DIR
+from .models import *
 
 
 class Provider:
     def __init__(self):
-        self.path = 'database.sqlite'
+        self.path = f'{ROOT_DIR}/database.sqlite'
         self.connection = sqlite3.connect(self.path)
 
     # user functions
@@ -47,9 +45,9 @@ class Provider:
         return user
 
     # request functions
-    def insert_request(self, req: str, created_by: int = None) -> int:
+    def insert_request(self, req: str, created_by: int = None, length: float = None) -> int:
         cursor = self.connection.cursor()
-        query = f'insert into request (req, created_by) values ("{req}", "{created_by}")'
+        query = f'insert into request (req, created_by, length) values ("{req}", "{created_by}", "{length}")'
         cursor.execute(query)
         self.connection.commit()
         reqId = cursor.lastrowid
