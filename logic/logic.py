@@ -1,4 +1,5 @@
 import math
+from telebot import types
 
 
 # term_frequency : tf
@@ -42,3 +43,8 @@ def cosine_similarity_calculator(document_vector, query_vector):
         dot_product += document_vector[i] * query_vector[i]
 
     return dot_product / (length_calculator(document_vector) * length_calculator(query_vector))
+
+
+# TODO: this is just for test change it!
+def user_start(user_id: types.User) -> str:
+    return f'Hello {user_id}'
