@@ -71,6 +71,14 @@ class Provider:
         cursor.close()
         return req
 
+    def update_request(self, request: RequestModel):
+        cursor = self.connection.cursor()
+        query = f'update request ' \
+                f'set req="{request.req}", created_by="{request.createdBy}", created_at="{request.createdAt}" ' \
+                f'where id="{request.id}" '
+        cursor.execute(query)
+        cursor.close()
+
     # response functions
     def insert_response(self, res: str) -> int:
         cursor = self.connection.cursor()
@@ -133,3 +141,49 @@ class Provider:
         shopList = ShopListModel(*cursor.fetchone())
         cursor.close()
         return shopList
+
+    # word functions
+    def insert_word(self, word: WordModel) -> int:
+        cursor = self.connection.cursor()
+        query = f'insert into word (word, idf, is_product) values ("{word.word}", "{word.idf}", "{word.is_product}")'
+        cursor.execute(query)
+        self.connection.commit()
+        wordId = cursor.lastrowid
+        cursor.close()
+        return wordId
+
+    def write_all_words(self, words: list[WordModel]):
+        for word in words:
+            self.insert_word(word)
+
+    def update_word(self, word: WordModel):
+        cursor = self.connection.cursor()
+        query = f'update word set ' \
+                f'word="{word.word}", idf="{word.idf}", is_product="{word.is_product}" ' \
+                f'where id="{word.id}" '
+        cursor.execute(query)
+        self.connection.commit()
+        cursor.close()
+
+    # req_word functions
+    def insert_req_word(self, req_word: ReqWordModel) -> int:
+        cursor = self.connection.cursor()
+        query = f'insert into req_word (req_id, word_id, tf, tfidf) ' \
+                f'values("{req_word.req_id}", "{req_word.word_id}", "{req_word.tf}", "{req_word.tfidf}")'
+        cursor.execute(query)
+        self.connection.commit()
+        reqWordId = cursor.lastrowid
+        cursor.close()
+        return reqWordId
+
+    def update_req_word(self, req_word: ReqWordModel):
+        cursor = self.connection.cursor()
+        query = f'update req_word set tf="{req_word.tf}", tfidf="{req_word.tfidf}"'
+        cursor.execute(query)
+        self.connection.commit()
+        cursor.close()
+
+    def update_all_req_words(self, req_words: list[ReqWordModel]):
+        cursor = self.connection.cursor()
+        for req_word in req_words:
+            self.update_req_word(req_word)

@@ -36,6 +36,9 @@ class Repository:
     def fetch_request_by_id(self, req_id: int) -> RequestModel:
         return self.provider.fetch_request_by_id(req_id)
 
+    def update_request(self, req: RequestModel):
+        return self.provider.update_request(req)
+
     # response functions
     def insert_response(self, res: str) -> int:
         return self.provider.insert_response(res)
@@ -58,3 +61,23 @@ class Repository:
 
     def fetch_shop_list_by_id(self, shop_list_id: int) -> ShopListModel:
         return self.provider.fetch_shop_list_by_id(shop_list_id)
+    
+    # word functions
+    def insert_word(self, word: WordModel) -> int:
+        return self.provider.insert_word(word)
+
+    def write_all_words(self, words: list[WordModel]):
+        return self.provider.write_all_words(words)
+
+    def update_word(self, word: WordModel):
+        return self.provider.update_word(word)
+
+    # req_word functions
+    def insert_req_word(self, req_word: ReqWordModel) -> int:
+        return self.provider.insert_req_word(req_word)
+
+    def update_req_word(self, req_word: ReqWordModel):
+        return self.provider.update_req_word(req_word)
+
+    def update_all_req_words(self, req_words: list[ReqWordModel]):
+        return self.provider.update_all_req_words(req_words)
