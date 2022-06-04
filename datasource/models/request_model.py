@@ -7,3 +7,4 @@ class RequestModel:
     req: str
     createdBy: int
     createdAt: str
+    length: float

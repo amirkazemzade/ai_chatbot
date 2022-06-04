@@ -9,7 +9,8 @@ class Provider:
         self.path = f'{ROOT_DIR}/database.sqlite'
         self.connection = sqlite3.connect(self.path)
 
-    # user functions
+    ''' user functions '''
+
     def insert_user(self, tel_id: int) -> int:
         cursor = self.connection.cursor()
         query = f'insert into user (tel_id) values ("{tel_id}")'
@@ -44,7 +45,8 @@ class Provider:
         cursor.close()
         return user
 
-    # request functions
+    ''' request functions '''
+
     def insert_request(self, req: str, created_by: int = None, length: float = None) -> int:
         cursor = self.connection.cursor()
         query = f'insert into request (req, created_by, length) values ("{req}", "{created_by}", "{length}")'
@@ -79,7 +81,26 @@ class Provider:
         cursor.execute(query)
         cursor.close()
 
-    # response functions
+    # a function to count the number of requests in the database
+    def count_requests(self) -> int:
+        cursor = self.connection.cursor()
+        query = 'select count(*) from request'
+        cursor.execute(query)
+        count = cursor.fetchone()[0]
+        cursor.close()
+        return count
+
+    # a function to get the last request in the database
+    def get_last_request(self) -> RequestModel:
+        cursor = self.connection.cursor()
+        query = 'select * from request order by id desc limit 1'
+        cursor.execute(query)
+        req = RequestModel(*cursor.fetchone())
+        cursor.close()
+        return req
+
+    ''' response functions '''
+
     def insert_response(self, res: str) -> int:
         cursor = self.connection.cursor()
         query = f'insert into response (resp) values ("{res}")'
@@ -106,7 +127,8 @@ class Provider:
         cursor.close()
         return res
 
-    # shop list functions
+    ''' shop list functions '''
+
     def insert_shop_list(self, user_id: int) -> int:
         cursor = self.connection.cursor()
         query = f'insert into shop_list (user_id) values ("{user_id}")'
@@ -142,7 +164,8 @@ class Provider:
         cursor.close()
         return shopList
 
-    # word functions
+    ''' word functions '''
+
     def insert_word(self, word: WordModel) -> int:
         cursor = self.connection.cursor()
         query = f'insert into word (word, idf, is_product) values ("{word.word}", "{word.idf}", "{word.is_product}")'
@@ -151,6 +174,15 @@ class Provider:
         wordId = cursor.lastrowid
         cursor.close()
         return wordId
+
+    # get word by id
+    def fetch_word_by_id(self, word_id: int) -> WordModel:
+        cursor = self.connection.cursor()
+        query = f'select * from word where id={word_id}'
+        cursor.execute(query)
+        word = WordModel(*cursor.fetchone())
+        cursor.close()
+        return word
 
     def write_all_words(self, words: list[WordModel]):
         for word in words:
@@ -165,7 +197,26 @@ class Provider:
         self.connection.commit()
         cursor.close()
 
-    # req_word functions
+    # a function to count the number of words in the database
+    def count_words(self) -> int:
+        cursor = self.connection.cursor()
+        query = 'select count(*) from word'
+        cursor.execute(query)
+        count = cursor.fetchone()[0]
+        cursor.close()
+        return count
+
+    # a function to get last inserted word
+    def get_last_word(self) -> WordModel:
+        cursor = self.connection.cursor()
+        query = 'select * from word order by id desc limit 1'
+        cursor.execute(query)
+        word = WordModel(*cursor.fetchone())
+        cursor.close()
+        return word
+
+    ''' req-word functions '''
+
     def insert_req_word(self, req_word: ReqWordModel) -> int:
         cursor = self.connection.cursor()
         query = f'insert into req_word (req_id, word_id, tf, tfidf) ' \
@@ -184,6 +235,25 @@ class Provider:
         cursor.close()
 
     def update_all_req_words(self, req_words: list[ReqWordModel]):
-        cursor = self.connection.cursor()
         for req_word in req_words:
             self.update_req_word(req_word)
+
+    # a function to get all req_words
+    def fetch_all_req_words(self) -> list[ReqWordModel]:
+        cursor = self.connection.cursor()
+        query = 'select * from req_word'
+        req_words = []
+        for row in cursor.execute(query):
+            req_words.append(ReqWordModel(*row))
+        cursor.close()
+        return req_words
+
+    # get all words of a req
+    def fetch_req_words(self, req_id: int) -> list[ReqWordModel]:
+        cursor = self.connection.cursor()
+        query = f'select * from req_word where req_id={req_id}'
+        req_words = []
+        for row in cursor.execute(query):
+            req_words.append(ReqWordModel(*row))
+        cursor.close()
+        return req_words
