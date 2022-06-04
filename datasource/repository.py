@@ -13,7 +13,8 @@ class Repository:
     def __init__(self):
         self.provider = Provider()
 
-    # user functions
+    ''' user functions '''
+
     def insert_user(self, tel_id: int) -> int:
         return self.provider.insert_user(tel_id)
 
@@ -26,7 +27,8 @@ class Repository:
     def fetch_user_by_index_id(self, index_id: int) -> UserModel:
         return self.provider.fetch_user_by_index_id(index_id)
 
-    # request functions
+    ''' request functions '''
+
     def insert_request(self, req: str, created_by: int = None, length: float = None) -> int:
         return self.provider.insert_request(req, created_by, length)
 
@@ -39,7 +41,14 @@ class Repository:
     def update_request(self, req: RequestModel):
         return self.provider.update_request(req)
 
-    # response functions
+    def count_requests(self) -> int:
+        return self.provider.count_requests()
+
+    def get_last_request(self) -> RequestModel:
+        return self.provider.get_last_request()
+
+    ''' response functions '''
+
     def insert_response(self, res: str) -> int:
         return self.provider.insert_response(res)
 
@@ -49,7 +58,8 @@ class Repository:
     def fetch_response_by_id(self, res_id: int) -> ResponseModel:
         return self.provider.fetch_response_by_id(res_id)
 
-    # shop list functions
+    ''' shop list functions '''
+
     def insert_shop_list(self, user_id: int) -> int:
         return self.provider.insert_shop_list(user_id)
 
@@ -61,8 +71,9 @@ class Repository:
 
     def fetch_shop_list_by_id(self, shop_list_id: int) -> ShopListModel:
         return self.provider.fetch_shop_list_by_id(shop_list_id)
-    
-    # word functions
+
+    ''' word functions '''
+
     def insert_word(self, word: WordModel) -> int:
         return self.provider.insert_word(word)
 
@@ -72,7 +83,14 @@ class Repository:
     def update_word(self, word: WordModel):
         return self.provider.update_word(word)
 
-    # req_word functions
+    def count_words(self) -> int:
+        return self.provider.count_words()
+
+    def get_last_word(self) -> WordModel:
+        return self.provider.get_last_word()
+
+    ''' req_word functions '''
+
     def insert_req_word(self, req_word: ReqWordModel) -> int:
         return self.provider.insert_req_word(req_word)
 
