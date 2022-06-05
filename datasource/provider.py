@@ -276,7 +276,7 @@ class Provider:
 
     def update_req_word(self, req_word: ReqWordModel):
         cursor = self.connection.cursor()
-        query = f'update req_word set tf="{req_word.tf}", tfidf="{req_word.tfidf}"'
+        query = f'update req_word set tf="{req_word.tf}", tfidf="{req_word.tfidf}" where id="{req_word.id}"'
         cursor.execute(query)
         self.connection.commit()
         cursor.close()
