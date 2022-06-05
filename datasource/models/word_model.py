@@ -3,8 +3,8 @@ from dataclasses import dataclass
 
 @dataclass
 class WordModel:
-    word: str
     id: int = None
-    is_product: bool = None
+    word: str = ''
     idf: float = None
+    is_product: bool = None
     created_at: str = None

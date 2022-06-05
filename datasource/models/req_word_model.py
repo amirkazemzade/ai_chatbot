@@ -3,8 +3,8 @@ from dataclasses import dataclass
 
 @dataclass
 class ReqWordModel:
-    req_id: int
-    word_id: int
-    id: int = None
-    tf: float = None
+    id: int = 0
+    req_id: int = None
+    word_id: int = None
+    tf: float = 0
     tfidf: float = None

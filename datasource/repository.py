@@ -106,5 +106,5 @@ class Repository:
     def update_all_req_words(self, req_words: list[ReqWordModel]):
         return self.provider.update_all_req_words(req_words)
 
-    def get_req_word_by_req_id_word_id(self, word_id: int, req_id: int) -> ReqWordModel:
+    def fetch_req_word_by_req_id_word_id(self, word_id: int, req_id: int) -> ReqWordModel:
         return self.provider.fetch_req_word_by_word_and_req(word_id, req_id)
