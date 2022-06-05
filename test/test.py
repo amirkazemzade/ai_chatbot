@@ -29,3 +29,16 @@ class TestProvider(unittest.TestCase):
     def test_get_last_word(self):
         provider = Provider()
         self.assertEqual(provider.get_last_word(), provider.fetch_word_by_id(4))
+
+    # test find_word_by_string function
+    def test_find_word_by_string(self):
+        provider = Provider()
+        self.assertEqual(provider.find_word_by_string("test"), provider.fetch_word_by_id(1))
+
+
+# test repository.py
+class TestRepository(unittest.TestCase):
+    # test fetch_word_by_id function
+    def test_fetch_word_by_id(self):
+        provider = Provider()
+        self.assertEqual(provider.fetch_word_by_id(1), provider.fetch_word_by_id(1))

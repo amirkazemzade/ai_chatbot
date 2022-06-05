@@ -80,6 +80,9 @@ class Repository:
     def write_all_words(self, words: list[WordModel]):
         return self.provider.write_all_words(words)
 
+    def fetch_all_words(self) -> list[WordModel]:
+        return self.provider.fetch_all_words()
+
     def update_word(self, word: WordModel):
         return self.provider.update_word(word)
 
@@ -88,6 +91,9 @@ class Repository:
 
     def get_last_word(self) -> WordModel:
         return self.provider.get_last_word()
+
+    def find_word_by_string(self, word: str) -> WordModel:
+        return self.provider.find_word_by_string(word)
 
     ''' req_word functions '''
 
@@ -99,3 +105,6 @@ class Repository:
 
     def update_all_req_words(self, req_words: list[ReqWordModel]):
         return self.provider.update_all_req_words(req_words)
+
+    def get_req_word_by_req_id_word_id(self, word_id: int, req_id: int) -> ReqWordModel:
+        return self.provider.fetch_req_word_by_word_and_req(word_id, req_id)
