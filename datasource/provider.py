@@ -1,4 +1,5 @@
 import sqlite3
+from typing import Optional
 
 from constants import ROOT_DIR
 from .models import *
@@ -29,19 +30,25 @@ class Provider:
         cursor.close()
         return users
 
-    def fetch_user_by_tel_id(self, tel_id: int) -> UserModel:
+    def fetch_user_by_tel_id(self, tel_id: int) -> Optional[UserModel]:
         cursor = self.connection.cursor()
         query = f'select * from user where tel_id={tel_id}'
         cursor.execute(query)
-        user = UserModel(*cursor.fetchone())
+        result = cursor.fetchone()
+        if result is None:
+            return None
+        user = UserModel(*result)
         cursor.close()
         return user
 
-    def fetch_user_by_index_id(self, index_id: int) -> UserModel:
+    def fetch_user_by_index_id(self, index_id: int) -> Optional[UserModel]:
         cursor = self.connection.cursor()
         query = f'select * from user where id={index_id}'
         cursor.execute(query)
-        user = UserModel(*cursor.fetchone())
+        result = cursor.fetchone()
+        if result is None:
+            return None
+        user = UserModel(*result)
         cursor.close()
         return user
 
@@ -65,11 +72,14 @@ class Provider:
         cursor.close()
         return requests
 
-    def fetch_request_by_id(self, req_id: int) -> RequestModel:
+    def fetch_request_by_id(self, req_id: int) -> Optional[RequestModel]:
         cursor = self.connection.cursor()
         query = f'select * from request where id={req_id}'
         cursor.execute(query)
-        req = RequestModel(*cursor.fetchone())
+        result = cursor.fetchone()
+        if result is None:
+            return None
+        req = RequestModel(*result)
         cursor.close()
         return req
 
@@ -91,11 +101,14 @@ class Provider:
         return count
 
     # a function to get the last request in the database
-    def get_last_request(self) -> RequestModel:
+    def get_last_request(self) -> Optional[RequestModel]:
         cursor = self.connection.cursor()
         query = 'select * from request order by id desc limit 1'
         cursor.execute(query)
-        req = RequestModel(*cursor.fetchone())
+        result = cursor.fetchone()
+        if result is None:
+            return None
+        req = RequestModel(*result)
         cursor.close()
         return req
 
@@ -119,11 +132,14 @@ class Provider:
         cursor.close()
         return responses
 
-    def fetch_response_by_id(self, res_id: int) -> ResponseModel:
+    def fetch_response_by_id(self, res_id: int) -> Optional[ResponseModel]:
         cursor = self.connection.cursor()
         query = f'select * from response where id={res_id}'
         cursor.execute(query)
-        res = ResponseModel(*cursor.fetchone())
+        result = cursor.fetchone()
+        if result is None:
+            return None
+        res = ResponseModel(*result)
         cursor.close()
         return res
 
@@ -156,11 +172,14 @@ class Provider:
         cursor.close()
         return shopLists
 
-    def fetch_shop_list_by_id(self, shop_list_id: int) -> ShopListModel:
+    def fetch_shop_list_by_id(self, shop_list_id: int) -> Optional[ShopListModel]:
         cursor = self.connection.cursor()
         query = f'select * from shop_list where id={shop_list_id}'
         cursor.execute(query)
-        shopList = ShopListModel(*cursor.fetchone())
+        result = cursor.fetchone()
+        if result is None:
+            return None
+        shopList = ShopListModel(*result)
         cursor.close()
         return shopList
 
@@ -186,11 +205,14 @@ class Provider:
         return words
 
     # get word by id
-    def fetch_word_by_id(self, word_id: int) -> WordModel:
+    def fetch_word_by_id(self, word_id: int) -> Optional[WordModel]:
         cursor = self.connection.cursor()
         query = f'select * from word where id={word_id}'
         cursor.execute(query)
-        word = WordModel(*cursor.fetchone())
+        result = cursor.fetchone()
+        if result is None:
+            return None
+        word = WordModel(*result)
         cursor.close()
         return word
 
@@ -217,20 +239,26 @@ class Provider:
         return count
 
     # a function to get last inserted word
-    def get_last_word(self) -> WordModel:
+    def get_last_word(self) -> Optional[WordModel]:
         cursor = self.connection.cursor()
         query = 'select * from word order by id desc limit 1'
         cursor.execute(query)
-        word = WordModel(*cursor.fetchone())
+        result = cursor.fetchone()
+        if result is None:
+            return None
+        word = WordModel(*result)
         cursor.close()
         return word
 
     # find a word by its string
-    def find_word_by_string(self, word: str) -> WordModel:
+    def find_word_by_string(self, word: str) -> Optional[WordModel]:
         cursor = self.connection.cursor()
         query = f'select * from word where word="{word}"'
         cursor.execute(query)
-        word = WordModel(*cursor.fetchone())
+        result = cursor.fetchone()
+        if result is None:
+            return None
+        word = WordModel(*result)
         cursor.close()
         return word
 
@@ -278,10 +306,13 @@ class Provider:
         return req_words
 
     # get a req_word by word id and req id
-    def fetch_req_word_by_word_and_req(self, word_id: int, req_id: int) -> ReqWordModel:
+    def fetch_req_word_by_word_and_req(self, word_id: int, req_id: int) -> Optional[ReqWordModel]:
         cursor = self.connection.cursor()
         query = f'select * from req_word where word_id={word_id} and req_id={req_id}'
         cursor.execute(query)
-        req_word = ReqWordModel(*cursor.fetchone())
+        result = cursor.fetchone()
+        if result is None:
+            return None
+        req_word = ReqWordModel(*result)
         cursor.close()
         return req_word
