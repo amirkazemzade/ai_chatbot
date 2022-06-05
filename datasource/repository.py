@@ -83,6 +83,9 @@ class Repository:
     def fetch_all_words(self) -> list[WordModel]:
         return self.provider.fetch_all_words()
 
+    def fetch_word_by_id(self, word_id: int) -> WordModel:
+        return self.provider.fetch_word_by_id(word_id)
+
     def update_word(self, word: WordModel):
         return self.provider.update_word(word)
 
@@ -100,6 +103,9 @@ class Repository:
     def insert_req_word(self, req_word: ReqWordModel) -> int:
         return self.provider.insert_req_word(req_word)
 
+    def fetch_all_req_words(self) -> list[ReqWordModel]:
+        return self.provider.fetch_all_req_words()
+
     def update_req_word(self, req_word: ReqWordModel):
         return self.provider.update_req_word(req_word)
 
@@ -108,3 +114,6 @@ class Repository:
 
     def fetch_req_word_by_req_id_word_id(self, word_id: int, req_id: int) -> ReqWordModel:
         return self.provider.fetch_req_word_by_word_and_req(word_id, req_id)
+
+    def fetch_req_word_by_req_id(self, req_id: int) -> list[ReqWordModel]:
+        return self.provider.fetch_req_word_by_req_id(req_id)
