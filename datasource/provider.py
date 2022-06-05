@@ -316,3 +316,13 @@ class Provider:
         req_word = ReqWordModel(*result)
         cursor.close()
         return req_word
+
+    # fetch req_word by req_id
+    def fetch_req_word_by_req_id(self, req_id: int) -> list[ReqWordModel]:
+        cursor = self.connection.cursor()
+        query = f'select * from req_word where req_id={req_id}'
+        req_words = []
+        for row in cursor.execute(query):
+            req_words.append(ReqWordModel(*row))
+        cursor.close()
+        return req_words

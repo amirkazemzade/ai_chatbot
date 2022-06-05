@@ -35,6 +35,11 @@ class TestProvider(unittest.TestCase):
         provider = Provider()
         self.assertEqual(provider.find_word_by_string("test"), provider.fetch_word_by_id(1))
 
+    # test calculate_tfidf function
+    def test_calculate_tfidf(self):
+        provider = Provider()
+        print(provider.calculate_tfidf())
+
 
 # test repository.py
 class TestRepository(unittest.TestCase):
