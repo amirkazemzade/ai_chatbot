@@ -1,8 +1,8 @@
-# calculate idf that is in word table
 from datasource import Repository
 from logic import inverse_document_frequency_calculator
 
 
+# calculate idf that is in word table
 def update_word():
     # repository instance
     repo = Repository()
