@@ -175,6 +175,16 @@ class Provider:
         cursor.close()
         return wordId
 
+    # get all word
+    def fetch_all_words(self) -> list[WordModel]:
+        cursor = self.connection.cursor()
+        query = 'select * from word'
+        words = []
+        for row in cursor.execute(query):
+            words.append(WordModel(*row))
+        cursor.close()
+        return words
+
     # get word by id
     def fetch_word_by_id(self, word_id: int) -> WordModel:
         cursor = self.connection.cursor()
@@ -210,6 +220,15 @@ class Provider:
     def get_last_word(self) -> WordModel:
         cursor = self.connection.cursor()
         query = 'select * from word order by id desc limit 1'
+        cursor.execute(query)
+        word = WordModel(*cursor.fetchone())
+        cursor.close()
+        return word
+
+    # find a word by its string
+    def find_word_by_string(self, word: str) -> WordModel:
+        cursor = self.connection.cursor()
+        query = f'select * from word where word="{word}"'
         cursor.execute(query)
         word = WordModel(*cursor.fetchone())
         cursor.close()
@@ -257,3 +276,12 @@ class Provider:
             req_words.append(ReqWordModel(*row))
         cursor.close()
         return req_words
+
+    # get a req_word by word id and req id
+    def fetch_req_word_by_word_and_req(self, word_id: int, req_id: int) -> ReqWordModel:
+        cursor = self.connection.cursor()
+        query = f'select * from req_word where word_id={word_id} and req_id={req_id}'
+        cursor.execute(query)
+        req_word = ReqWordModel(*cursor.fetchone())
+        cursor.close()
+        return req_word
