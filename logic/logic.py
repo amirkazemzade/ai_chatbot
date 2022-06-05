@@ -1,12 +1,11 @@
 import math
-from telebot import types
+# from telebot import types
+from datasource.models import RequestModel
+
 
 # term_frequency : tf
 # term : word
 # document : sentence
-from datasource.models import RequestModel
-
-
 def term_frequency(term, document):
     normalized_document = document.lower().split()
     return normalized_document.count(term.lower()) / float(len(normalized_document))
@@ -36,9 +35,9 @@ def length_calculator(tf_idf_of_document):
     return math.sqrt(square_value)
 
 
-# document_vector : list of all tf * idf related to this document
-# length of two parameter (document_vector, query_vector) should be same. (equal the number of all word that we have)
-# for each term (word) that doesn't exist in the vector, we put 0 value in the equation
+# document_vector : list of all tf * idf related to this document length of two parameter (document_vector,
+# query_vector) should be same. (equal the number of all word that we have) for each term (word) that doesn't
+# exist in the vector, we put 0 value in the equation
 def cosine_similarity_calculator(document_vector, query_vector):
     dot_product = 0.0
     for i in range(len(document_vector)):
@@ -46,7 +45,6 @@ def cosine_similarity_calculator(document_vector, query_vector):
 
     return dot_product / (length_calculator(document_vector) * length_calculator(query_vector))
 
-
-# TODO: this is just for test change it!
-def user_start(user_id: types.User) -> str:
-    return f'Hello {user_id}'
+# # TODO: this is just for test change it!
+# def user_start(user_id: types.User) -> str:
+#     return f'Hello {user_id}'
