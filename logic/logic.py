@@ -1,10 +1,12 @@
 import math
 from telebot import types
 
-
 # term_frequency : tf
 # term : word
 # document : sentence
+from datasource.models import RequestModel
+
+
 def term_frequency(term, document):
     normalized_document = document.lower().split()
     return normalized_document.count(term.lower()) / float(len(normalized_document))
@@ -12,10 +14,10 @@ def term_frequency(term, document):
 
 # inverse_document_frequency : idf
 # term : word
-def inverse_document_frequency(term, list_of_all_document):
+def inverse_document_frequency(term, list_of_all_document: list[RequestModel]):
     num_of_document_with_this_term = 0
     for doc in list_of_all_document:
-        if term.lower() in doc.lower().split():
+        if term.lower() in doc.req.lower().split():
             num_of_document_with_this_term += 1
 
     if num_of_document_with_this_term > 0:
