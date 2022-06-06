@@ -87,8 +87,9 @@ class Provider:
         cursor = self.connection.cursor()
         query = f'update request ' \
                 f'set req="{request.req}", created_by="{request.createdBy}", created_at="{request.createdAt}" ' \
-                f'where id="{request.id}" '
+                f', length="{request.length}" where id="{request.id}" '
         cursor.execute(query)
+        self.connection.commit()
         cursor.close()
 
     # a function to count the number of requests in the database

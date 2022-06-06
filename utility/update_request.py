@@ -17,6 +17,7 @@ def update_request():
         # calculating length value using logic's function
         length_value = length_parameter_calculator.length_calculator(req_word_model)
 
+        # if document.length is None:
         document.length = length_value
         repo.update_request(document)
 

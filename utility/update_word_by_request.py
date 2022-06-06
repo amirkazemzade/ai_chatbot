@@ -1,6 +1,7 @@
 # a function to update word table by splitting request table sentences
 from datasource import Repository
 from datasource.models import WordModel, ReqWordModel
+from logic import term_frequency_calculator
 
 
 def update_word_by_request():
@@ -28,6 +29,7 @@ def update_word_by_request():
                 req_word.id = repository.insert_req_word(req_word)
             # update req_word
             tf = request.req.count(word.word) / len(request.req)
+            # tf = term_frequency_calculator.term_frequency(word.word, request.req)
             req_word.tf = tf
             repository.update_req_word(req_word)
 
