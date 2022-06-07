@@ -144,6 +144,16 @@ class Provider:
         cursor.close()
         return res
 
+    # fetch response by req_id
+    def fetch_response_by_req_id(self, req_id: int) -> list[ResponseModel]:
+        cursor = self.connection.cursor()
+        query = f'select * from response where id in (select resp_id from request_response where req_id={req_id})'
+        responses = []
+        for row in cursor.execute(query):
+            responses.append(ResponseModel(*row))
+        cursor.close()
+        return responses
+
     ''' shop list functions '''
 
     def insert_shop_list(self, user_id: int) -> int:
@@ -327,3 +337,24 @@ class Provider:
             req_words.append(ReqWordModel(*row))
         cursor.close()
         return req_words
+
+    ''' request_response functions '''
+
+    def insert_request_response(self, request_response: RequestResponseModel) -> int:
+        cursor = self.connection.cursor()
+        query = f'insert into request_response (req_id, resp_id) ' \
+                f'values("{request_response.req_id}", "{request_response.resp_id}") '
+        cursor.execute(query)
+        self.connection.commit()
+        requestResponseId = cursor.lastrowid
+        cursor.close()
+        return requestResponseId
+
+    def update_request_response(self, request_response: RequestResponseModel):
+        cursor = self.connection.cursor()
+        query = f'update request_response ' \
+                f'set req_id="{request_response.req_id}", resp_id="{request_response.resp_id}" ' \
+                f'where id="{request_response.id}"'
+        cursor.execute(query)
+        self.connection.commit()
+        cursor.close()
