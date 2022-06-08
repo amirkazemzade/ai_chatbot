@@ -58,6 +58,9 @@ class Repository:
     def fetch_response_by_id(self, res_id: int) -> ResponseModel:
         return self.provider.fetch_response_by_id(res_id)
 
+    def fetch_response_by_req_id(self, req_id: int) -> list[ResponseModel]:
+        return self.provider.fetch_response_by_req_id(req_id)
+
     ''' shop list functions '''
 
     def insert_shop_list(self, user_id: int) -> int:

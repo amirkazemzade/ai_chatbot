@@ -80,7 +80,5 @@ class QueryProcessor:
 
     def find_response_corresponding_request(self):
         document_model = self.cosine_similarity_calculator()
-        # todo
-        response_model = self.repository.fetch_response_by_request()
-
-        return response_model
+        response_model = self.repository.fetch_response_by_req_id(document_model.id)
+        return response_model[0]
