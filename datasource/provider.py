@@ -194,6 +194,28 @@ class Provider:
         cursor.close()
         return shopList
 
+    ''' shop list content functions '''
+
+    def insert_shop_list_content(self, shop_list_id: int, product_id: int, quantity: int, quantity_type: str) -> int:
+        cursor = self.connection.cursor()
+        query = f'insert into shop_list_contents (list_id, product_id, quantity, quantity_type) ' \
+                f'values ("{shop_list_id}", "{product_id}", "{quantity}", "{quantity_type}")'
+        cursor.execute(query)
+        self.connection.commit()
+        shopListContentId = cursor.lastrowid
+        cursor.close()
+        return shopListContentId
+
+    # fetch contents of a shop list
+    def fetch_shop_list_contents(self, shop_list_id: int) -> list[ShopListContentModel]:
+        cursor = self.connection.cursor()
+        query = f'select * from shop_list_contents where list_id={shop_list_id}'
+        shopListContents = []
+        for row in cursor.execute(query):
+            shopListContents.append(ShopListContentModel(*row))
+        cursor.close()
+        return shopListContents
+
     ''' word functions '''
 
     def insert_word(self, word: WordModel) -> int:
