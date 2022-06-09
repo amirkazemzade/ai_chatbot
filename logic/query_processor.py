@@ -14,6 +14,7 @@ class QueryProcessor:
         self.shopping_list_id = -1
         self.last_response = ""
         self.last_product = None
+        self.repository = Repository()
 
     def user_start(self, user_telegram_model: types.User):
         user_id = self.create_user(user_telegram_model.id)
