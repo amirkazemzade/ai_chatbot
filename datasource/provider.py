@@ -194,6 +194,14 @@ class Provider:
         cursor.close()
         return shopList
 
+    # delete shop list and its contents
+    def delete_shop_list(self, shop_list_id: int):
+        cursor = self.connection.cursor()
+        query = f'delete from shop_list where id={shop_list_id}'
+        cursor.execute(query)
+        self.connection.commit()
+        cursor.close()
+
     ''' shop list content functions '''
 
     def insert_shop_list_content(self, shop_list_id: int, product_id: int, quantity: str) -> int:
@@ -398,6 +406,18 @@ class Provider:
     def fetch_product_by_name(self, name: str) -> Optional[ProductModel]:
         cursor = self.connection.cursor()
         query = f'select * from product where name="{name}"'
+        cursor.execute(query)
+        result = cursor.fetchone()
+        if result is None:
+            return None
+        product = ProductModel(*result)
+        cursor.close()
+        return product
+
+    # fetch product by id
+    def fetch_product_by_id(self, product_id: int) -> Optional[ProductModel]:
+        cursor = self.connection.cursor()
+        query = f'select * from product where id="{product_id}"'
         cursor.execute(query)
         result = cursor.fetchone()
         if result is None:

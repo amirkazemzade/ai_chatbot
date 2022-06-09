@@ -136,3 +136,6 @@ class Repository:
 
     def fetch_product_by_name(self, name: str) -> ProductModel:
         return self.provider.fetch_product_by_name(name)
+
+    def fetch_product_by_id(self, product_id: int) -> ProductModel:
+        return self.provider.fetch_product_by_id(product_id)
