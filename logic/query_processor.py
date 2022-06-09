@@ -7,9 +7,9 @@ from datasource.models import ProductModel
 
 
 class QueryProcessor:
-    repository = Repository()
 
     def __init__(self):
+        self.repository = Repository()
         self.user_id = -1
         self.shopping_list_id = -1
         self.last_response = ""
