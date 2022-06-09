@@ -196,10 +196,10 @@ class Provider:
 
     ''' shop list content functions '''
 
-    def insert_shop_list_content(self, shop_list_id: int, product_id: int, quantity: int, quantity_type: str) -> int:
+    def insert_shop_list_content(self, shop_list_id: int, product_id: int, quantity: str) -> int:
         cursor = self.connection.cursor()
-        query = f'insert into shop_list_contents (list_id, product_id, quantity, quantity_type) ' \
-                f'values ("{shop_list_id}", "{product_id}", "{quantity}", "{quantity_type}")'
+        query = f'insert into shop_list_contents (list_id, product_id, quantity) ' \
+                f'values ("{shop_list_id}", "{product_id}", "{quantity}")'
         cursor.execute(query)
         self.connection.commit()
         shopListContentId = cursor.lastrowid

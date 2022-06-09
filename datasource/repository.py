@@ -75,6 +75,14 @@ class Repository:
     def fetch_shop_list_by_id(self, shop_list_id: int) -> ShopListModel:
         return self.provider.fetch_shop_list_by_id(shop_list_id)
 
+    ''' shop list content functions '''
+
+    def insert_shop_list_content(self, shop_list_id: int, product_id: int, quantity: str) -> int:
+        return self.provider.insert_shop_list_content(shop_list_id, product_id, quantity)
+
+    def fetch_shop_list_contents(self, shop_list_id: int) -> list[ShopListContentModel]:
+        return self.provider.fetch_shop_list_contents(shop_list_id)
+
     ''' word functions '''
 
     def insert_word(self, word: WordModel) -> int:

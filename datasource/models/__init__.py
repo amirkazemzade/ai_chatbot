@@ -6,3 +6,4 @@ from .word_model import WordModel
 from .req_word_model import ReqWordModel
 from .request_response_model import RequestResponseModel
 from .product_model import ProductModel
+from .shop_list_content_model import ShopListContentModel
