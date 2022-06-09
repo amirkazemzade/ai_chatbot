@@ -64,7 +64,7 @@ class QueryProcessor:
             for item in shopping_list:
                 product_name = self.repository.fetch_product_by_id(item.productId)
                 product_quantity = item.quantity
-                shopping_list_message += "{} : {}".format(product_name, product_quantity)
+                shopping_list_message += "{} : {}\n".format(product_name, product_quantity)
             return shopping_list_message
         else:
             tf_list = self.tf_calculator(message)
@@ -73,6 +73,7 @@ class QueryProcessor:
             length = self.length_calculator(tf_by_idf_list)
             response_model = self.find_response_corresponding_request(message, tf_by_idf_list, length)
             self.last_response = response_model.resp
+            return response_model.resp
 
     def tf_calculator(self, query_text):
         tf_list = [0.0] * (len(query_text.split(" ")))
