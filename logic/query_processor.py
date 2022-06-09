@@ -3,18 +3,23 @@ import math
 from datasource import Repository
 from logic import term_frequency_calculator
 from telebot import types
+from datasource.models import ProductModel
 
 
 class QueryProcessor:
     repository = Repository()
 
     def __init__(self):
+        self.user_id = -1
+        self.shopping_list_id = -1
         self.last_response = ""
         self.last_product = None
 
     def user_start(self, user_telegram_model: types.User):
         user_id = self.create_user(user_telegram_model.id)
+        self.user_id = user_id
         user_shopping_list_id = self.create_user_shopping_list(user_id)
+        self.shopping_list_id = user_shopping_list_id
         return "{} سلام".format(user_telegram_model.first_name)
 
     def create_user(self, user_telegram_id):
@@ -34,13 +39,13 @@ class QueryProcessor:
             return user_shopping_list[0].id
 
     # this function calls when a query come
-    def parameter_calculator(self, user_model):
+    def parameter_calculator(self, user_telegram_model: types.User, message: str):
         if self.last_response == "چه کالایی؟":
-            # self.add_product_to_user_shopping_list(user_model.id, user_model.query)
-            is_product_exist_in_db = self.repository.fetch_product_by_name(user_model.query)
+            is_product_exist_in_db = self.repository.fetch_product_by_name(message)
             if is_product_exist_in_db is None:
-                product = product_model(user_model.query)
+                product = ProductModel(name=message)
                 self.repository.insert_product(product)
+                self.last_product = product
             else:
                 self.last_product = is_product_exist_in_db
             response = "چه مقدار؟"
@@ -48,14 +53,18 @@ class QueryProcessor:
             return response
         elif self.last_response == "چه مقدار؟":
             # todo how to add a product into database
+            # self.add_product_to_user_shopping_list(user_model.id, user_model.query)
+
+            self.repository.insert_shop_list_content(self.shopping_list_id, self.last_product.id, message)
+
             response = "این کالا به سبد خرید شما اضافه شد."
             return response
         else:
-            tf_list = self.tf_calculator(user_model.query)
-            idf_list = self.idf_calculator(user_model.query)
-            tf_by_idf_list = self.tf_by_idf_calculator(user_model.query, tf_list, idf_list)
+            tf_list = self.tf_calculator(message)
+            idf_list = self.idf_calculator(message)
+            tf_by_idf_list = self.tf_by_idf_calculator(message, tf_list, idf_list)
             length = self.length_calculator(tf_by_idf_list)
-            response_model = self.find_response_corresponding_request(user_model.query, tf_by_idf_list, length)
+            response_model = self.find_response_corresponding_request(message, tf_by_idf_list, length)
 
             self.last_response = response_model.resp
 
