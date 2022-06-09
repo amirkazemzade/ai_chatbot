@@ -9,7 +9,6 @@ from datasource.models import ProductModel
 class QueryProcessor:
 
     def __init__(self):
-        self.repository = Repository()
         self.user_id = -1
         self.shopping_list_id = -1
         self.last_response = ""
@@ -41,6 +40,7 @@ class QueryProcessor:
 
     # this function calls when a query come
     def parameter_calculator(self, user_telegram_model: types.User, message: str):
+        # add a product (what product?)
         if self.last_response == "چه کالایی؟":
             is_product_exist_in_db = self.repository.fetch_product_by_name(message)
             if is_product_exist_in_db is None:
@@ -52,21 +52,26 @@ class QueryProcessor:
             response = "چه مقدار؟"
             self.last_response = response
             return response
+        # ask for quantity of that product and then add it to user shopping list's
         elif self.last_response == "چه مقدار؟":
-            # todo how to add a product into database
-            # self.add_product_to_user_shopping_list(user_model.id, user_model.query)
-
             self.repository.insert_shop_list_content(self.shopping_list_id, self.last_product.id, message)
-
             response = "این کالا به سبد خرید شما اضافه شد."
             return response
+        # handle the user request for showing shopping list
+        elif self.last_response == "بفرما":
+            shopping_list_message = ""
+            shopping_list = self.repository.fetch_shop_list_contents(self.shopping_list_id)
+            for item in shopping_list:
+                product_name = self.repository.fetch_product_by_id(item.productId)
+                product_quantity = item.quantity
+                shopping_list_message += "{} : {}".format(product_name, product_quantity)
+            return shopping_list_message
         else:
             tf_list = self.tf_calculator(message)
             idf_list = self.idf_calculator(message)
             tf_by_idf_list = self.tf_by_idf_calculator(message, tf_list, idf_list)
             length = self.length_calculator(tf_by_idf_list)
             response_model = self.find_response_corresponding_request(message, tf_by_idf_list, length)
-
             self.last_response = response_model.resp
 
     def tf_calculator(self, query_text):
