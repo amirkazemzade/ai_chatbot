@@ -380,3 +380,28 @@ class Provider:
         cursor.execute(query)
         self.connection.commit()
         cursor.close()
+
+    ''' product functions '''
+
+    # insert a product
+    def insert_product(self, product: ProductModel) -> int:
+        cursor = self.connection.cursor()
+        query = f'insert into product (name) ' \
+                f'values("{product.name}")'
+        cursor.execute(query)
+        self.connection.commit()
+        productId = cursor.lastrowid
+        cursor.close()
+        return productId
+
+    # fetch product by name
+    def fetch_product_by_name(self, name: str) -> Optional[ProductModel]:
+        cursor = self.connection.cursor()
+        query = f'select * from product where name="{name}"'
+        cursor.execute(query)
+        result = cursor.fetchone()
+        if result is None:
+            return None
+        product = ProductModel(*result)
+        cursor.close()
+        return product

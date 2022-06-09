@@ -2,7 +2,6 @@ from dataclasses import dataclass
 
 
 @dataclass
-class ResponseModel:
+class ProductModel:
     id: int
-    resp: str
-    createdAt: str
+    name: str

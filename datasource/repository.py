@@ -120,3 +120,11 @@ class Repository:
 
     def fetch_req_word_by_req_id(self, req_id: int) -> list[ReqWordModel]:
         return self.provider.fetch_req_word_by_req_id(req_id)
+
+    ''' product functions '''
+
+    def insert_product(self, product: ProductModel) -> int:
+        return self.provider.insert_product(product)
+
+    def fetch_product_by_name(self, name: str) -> ProductModel:
+        return self.provider.fetch_product_by_name(name)
