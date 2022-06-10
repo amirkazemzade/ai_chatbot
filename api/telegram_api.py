@@ -1,3 +1,5 @@
+import traceback
+
 import constants
 import telebot
 from logic import QueryProcessor
@@ -18,13 +20,21 @@ def all_messages(message: telebot.types.Message):
 
 
 def initialize_user(message: telebot.types.Message):
-    processor = QueryProcessor()
-    return processor.user_start(message.from_user)
+    try:
+        processor = QueryProcessor()
+        return processor.user_start(message.from_user)
+    except Exception:
+        traceback.print_exc()
+        return 'مشکلی رخ داده است.'
 
 
 def response_to_message(message: telebot.types.Message):
-    processor = QueryProcessor()
-    return processor.parameter_calculator(message.from_user, message.text)
+    try:
+        processor = QueryProcessor()
+        return processor.parameter_calculator(message.from_user, message.text)
+    except Exception:
+        traceback.print_exc()
+        return 'مشکلی رخ داده است.'
 
 
 ai_bot.polling()
