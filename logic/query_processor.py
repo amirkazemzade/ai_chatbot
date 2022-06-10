@@ -124,7 +124,7 @@ class QueryProcessor:
         # maximum cosine_similarity_value that we obtained
         best_document_model_value = 0.0
 
-        split_request = query_text
+        split_request = query_text.split(" ")
         # loop through the list of all documents
         for document in documents_list:
             current_cosine_similarity_value = 0.0
