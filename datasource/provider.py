@@ -441,9 +441,9 @@ class Provider:
     def update_history(self, history: HistoryModel):
         cursor = self.connection.cursor()
         query = f'update history ' \
-                f'set user_id="{history.user_id}", last_response="{history.last_response}", ' \
+                f'set last_response="{history.last_response}", ' \
                 f'last_product_id="{history.last_product_id}" ' \
-                f'where id="{history.id}"'
+                f'where user_id="{history.user_id}"'
         cursor.execute(query)
         self.connection.commit()
         cursor.close()

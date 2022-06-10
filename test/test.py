@@ -1,5 +1,6 @@
 import unittest
 
+from datasource.models import HistoryModel
 from datasource.provider import Provider
 
 
@@ -47,3 +48,8 @@ class TestRepository(unittest.TestCase):
     def test_fetch_word_by_id(self):
         provider = Provider()
         self.assertEqual(provider.fetch_word_by_id(1), provider.fetch_word_by_id(1))
+
+    # test update_history
+    def test_update_history(self):
+        provider = Provider()
+        self.assertEqual(provider.update_history(HistoryModel()), provider.update_history(1, "test"))
