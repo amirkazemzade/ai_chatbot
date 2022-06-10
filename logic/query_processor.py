@@ -3,23 +3,23 @@ import math
 from datasource import Repository
 from logic import term_frequency_calculator
 from telebot import types
-from datasource.models import ProductModel
+from datasource.models import ProductModel, RequestModel, HistoryModel
 
 
 class QueryProcessor:
 
     def __init__(self):
-        self.user_id = -1
-        self.shopping_list_id = -1
-        self.last_response = ""
-        self.last_product = None
+        # self.user_id = -1
+        # self.shopping_list_id = -1
+        # self.last_response = ""
+        # self.last_product = None
         self.repository = Repository()
 
     def user_start(self, user_telegram_model: types.User):
         user_id = self.create_user(user_telegram_model.id)
-        self.user_id = user_id
+        # self.user_id = user_id
         user_shopping_list_id = self.create_user_shopping_list(user_id)
-        self.shopping_list_id = user_shopping_list_id
+        # self.shopping_list_id = user_shopping_list_id
         return "{} سلام".format(user_telegram_model.first_name)
 
     def create_user(self, user_telegram_id):
@@ -40,40 +40,62 @@ class QueryProcessor:
 
     # this function calls when a query come
     def parameter_calculator(self, user_telegram_model: types.User, message: str):
+        user_id = self.repository.fetch_user_by_tel_id(user_telegram_model.id).id
+        user_shopping_list_id = self.repository.fetch_user_shop_lists(user_id)[0].id
+
+        user_history_model = self.repository.fetch_history_by_user_id(user_id)
+        last_response = ""
+        last_product = None
+        if user_history_model is None:
+            self.repository.insert_history(HistoryModel(user_id=user_id))
+        else:
+            if user_history_model.last_response != "":
+                last_response = user_history_model.last_response
+
         # add a product (what product?)
-        if self.last_response == "چه کالایی؟":
+        if last_response == "چه کالایی ؟":
             is_product_exist_in_db = self.repository.fetch_product_by_name(message)
             if is_product_exist_in_db is None:
                 product = ProductModel(name=message)
-                self.repository.insert_product(product)
-                self.last_product = product
+                product_id = self.repository.insert_product(product)
+                # self.last_product = product
+                self.repository.update_history(HistoryModel(user_id=user_id, last_product_id=product_id))
             else:
-                self.last_product = is_product_exist_in_db
+                # self.last_product = is_product_exist_in_db
+                self.repository.update_history(HistoryModel(user_id=user_id, last_product_id=is_product_exist_in_db.id))
             response = "چه مقدار؟"
-            self.last_response = response
+            # self.last_response = response
+            self.repository.update_history(HistoryModel(user_id=user_id, last_response=response))
             return response
         # ask for quantity of that product and then add it to user shopping list's
-        elif self.last_response == "چه مقدار؟":
-            self.repository.insert_shop_list_content(self.shopping_list_id, self.last_product.id, message)
+        elif last_response == "چه مقدار؟":
+            updated_user_history = self.repository.fetch_history_by_user_id(user_id)
+            self.repository.insert_shop_list_content(user_shopping_list_id, updated_user_history.last_product_id,
+                                                     message)
             response = "این کالا به سبد خرید شما اضافه شد."
+            # self.last_response = response
+            self.repository.update_history(HistoryModel(user_id=user_id, last_response=response))
             return response
         # handle the user request for showing shopping list
-        elif self.last_response == "بفرما":
+        elif last_response == "بفرما":
             shopping_list_message = ""
-            shopping_list = self.repository.fetch_shop_list_contents(self.shopping_list_id)
+            shopping_list = self.repository.fetch_shop_list_contents(user_shopping_list_id)
             for item in shopping_list:
                 product_name = self.repository.fetch_product_by_id(item.productId)
                 product_quantity = item.quantity
                 shopping_list_message += "{} : {}\n".format(product_name, product_quantity)
+
+            self.repository.update_history(HistoryModel(user_id=user_id, last_response=""))
             return shopping_list_message
         else:
             tf_list = self.tf_calculator(message)
             idf_list = self.idf_calculator(message)
             tf_by_idf_list = self.tf_by_idf_calculator(message, tf_list, idf_list)
             length = self.length_calculator(tf_by_idf_list)
-            response_model = self.find_response_corresponding_request(message, tf_by_idf_list, length)
-            self.last_response = response_model.resp
-            return response_model.resp
+            response = self.find_response_corresponding_request(message, tf_by_idf_list, length)
+            # self.last_response = response
+            self.repository.update_history(HistoryModel(user_id=user_id, last_response=response))
+            return response
 
     def tf_calculator(self, query_text):
         tf_list = [0.0] * (len(query_text.split(" ")))
@@ -147,5 +169,8 @@ class QueryProcessor:
 
     def find_response_corresponding_request(self, query_text, tf_by_idf_list, length_value):
         document_model = self.cosine_similarity_calculator(query_text, tf_by_idf_list, length_value)
-        response_model = self.repository.fetch_response_by_req_id(document_model.id)
-        return response_model[0]
+        if document_model is None:
+            return "لطفا یه جور دیگه بگو که بفهمم!"
+        else:
+            response_model = self.repository.fetch_response_by_req_id(document_model.id)
+            return response_model[0].resp

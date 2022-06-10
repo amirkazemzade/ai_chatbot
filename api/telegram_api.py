@@ -13,7 +13,8 @@ def start(message: telebot.types.Message):
 
 @ai_bot.message_handler(func=lambda m: True)
 def all_messages(message: telebot.types.Message):
-    response_to_message(message)
+    response = response_to_message(message)
+    ai_bot.reply_to(message, response)
 
 
 def initialize_user(message: telebot.types.Message):
