@@ -3,7 +3,6 @@ import telebot
 from logic import QueryProcessor
 
 ai_bot = telebot.TeleBot(constants.API_TOKEN)
-processor = QueryProcessor()
 
 
 @ai_bot.message_handler(commands=['start'])
@@ -18,10 +17,12 @@ def all_messages(message: telebot.types.Message):
 
 
 def initialize_user(message: telebot.types.Message):
+    processor = QueryProcessor()
     return processor.user_start(message.from_user)
 
 
 def response_to_message(message: telebot.types.Message):
+    processor = QueryProcessor()
     return processor.parameter_calculator(message.from_user, message.text)
 
 

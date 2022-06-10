@@ -1,5 +1,3 @@
-from typing import Optional
-
 from .models import *
 from .models import HistoryModel
 from .provider import Provider
