@@ -1,4 +1,7 @@
+from typing import Optional
+
 from .models import *
+from .models import HistoryModel
 from .provider import Provider
 
 
@@ -144,3 +147,15 @@ class Repository:
 
     def fetch_product_by_id(self, product_id: int) -> ProductModel:
         return self.provider.fetch_product_by_id(product_id)
+
+    ''' history functions '''
+
+    def insert_history(self, history: HistoryModel) -> int:
+        return self.provider.insert_history(history)
+
+    def update_history(self, history: HistoryModel):
+        return self.provider.update_history(history)
+
+    def fetch_history_by_user_id(self, user_id: int) -> HistoryModel:
+        return self.provider.fetch_history_by_user_id(user_id)
+

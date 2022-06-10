@@ -425,3 +425,37 @@ class Provider:
         product = ProductModel(*result)
         cursor.close()
         return product
+
+    ''' history functions '''
+    def insert_history(self, history: HistoryModel) -> int:
+        cursor = self.connection.cursor()
+        query = f'insert into history (user_id, last_response, last_product_id) ' \
+                f'values("{history.user_id}", "{history.last_response}", "{history.last_product_id}")'
+        cursor.execute(query)
+        self.connection.commit()
+        historyId = cursor.lastrowid
+        cursor.close()
+        return historyId
+
+    # update history
+    def update_history(self, history: HistoryModel):
+        cursor = self.connection.cursor()
+        query = f'update history ' \
+                f'set user_id="{history.user_id}", last_response="{history.last_response}", ' \
+                f'last_product_id="{history.last_product_id}" ' \
+                f'where id="{history.id}"'
+        cursor.execute(query)
+        self.connection.commit()
+        cursor.close()
+
+    # fetch history by user id
+    def fetch_history_by_user_id(self, user_id: int) -> Optional[HistoryModel]:
+        cursor = self.connection.cursor()
+        query = f'select * from history where user_id="{user_id}"'
+        cursor.execute(query)
+        result = cursor.fetchone()
+        if result is None:
+            return None
+        history = HistoryModel(*result)
+        cursor.close()
+        return history
