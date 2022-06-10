@@ -149,6 +149,3 @@ class QueryProcessor:
         document_model = self.cosine_similarity_calculator(query_text, tf_by_idf_list, length_value)
         response_model = self.repository.fetch_response_by_req_id(document_model.id)
         return response_model[0]
-
-    def add_product_to_user_shopping_list(self, user_id, product_id):
-        self.repository.insert_shop_list_content(user_id, product_id)
