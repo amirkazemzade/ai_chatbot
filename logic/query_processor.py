@@ -59,13 +59,17 @@ class QueryProcessor:
                 product = ProductModel(name=message)
                 product_id = self.repository.insert_product(product)
                 # self.last_product = product
-                self.repository.update_history(HistoryModel(user_id=user_id, last_product_id=product_id))
+                self.repository.update_history(
+                    HistoryModel(user_id=user_id, last_response=last_response, last_product_id=product_id))
             else:
                 # self.last_product = is_product_exist_in_db
-                self.repository.update_history(HistoryModel(user_id=user_id, last_product_id=is_product_exist_in_db.id))
+                self.repository.update_history(HistoryModel(user_id=user_id, last_response=last_response,
+                                                            last_product_id=is_product_exist_in_db.id))
             response = "چه مقدار؟"
             # self.last_response = response
-            self.repository.update_history(HistoryModel(user_id=user_id, last_response=response))
+            user_history_updated = self.repository.fetch_history_by_user_id(user_id)
+            self.repository.update_history(HistoryModel(user_id=user_id, last_response=response,
+                                                        last_product_id=user_history_updated.last_product_id))
             return response
         # ask for quantity of that product and then add it to user shopping list's
         elif last_response == "چه مقدار؟":
@@ -81,7 +85,11 @@ class QueryProcessor:
             shopping_list_message = ""
             shopping_list = self.repository.fetch_shop_list_contents(user_shopping_list_id)
             for item in shopping_list:
-                product_name = self.repository.fetch_product_by_id(item.productId)
+                product_model = self.repository.fetch_product_by_id(item.productId)
+                if product_model is None:
+                    product_name = "no name!"
+                else:
+                    product_name = product_model.name
                 product_quantity = item.quantity
                 shopping_list_message += "{} : {}\n".format(product_name, product_quantity)
 
