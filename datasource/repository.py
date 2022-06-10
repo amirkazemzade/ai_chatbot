@@ -61,6 +61,11 @@ class Repository:
     def fetch_response_by_req_id(self, req_id: int) -> list[ResponseModel]:
         return self.provider.fetch_response_by_req_id(req_id)
 
+    ''' request response functions '''
+
+    def insert_request_response(self, req_id: int, resp_id: int) -> int:
+        return self.provider.insert_request_response(RequestResponseModel(req_id=req_id, resp_id=resp_id))
+
     ''' shop list functions '''
 
     def insert_shop_list(self, user_id: int) -> int:
@@ -136,3 +141,6 @@ class Repository:
 
     def fetch_product_by_name(self, name: str) -> ProductModel:
         return self.provider.fetch_product_by_name(name)
+
+    def fetch_product_by_id(self, product_id: int) -> ProductModel:
+        return self.provider.fetch_product_by_id(product_id)
