@@ -1,3 +1,4 @@
+from collections import UserDict
 import math
 
 from datasource import Repository
@@ -41,7 +42,11 @@ class QueryProcessor:
     # this function calls when a query come
     def parameter_calculator(self, user_telegram_model: types.User, message: str):
         user_id = self.repository.fetch_user_by_tel_id(user_telegram_model.id).id
-        user_shopping_list_id = self.repository.fetch_user_shop_lists(user_id)[0].id
+        try:
+           user_shopping_list_id = self.repository.fetch_user_shop_lists(user_id)[0].id
+        except IndexError as err:
+            print('>> Shop list is empty!')
+            return
 
         user_history_model = self.repository.fetch_history_by_user_id(user_id)
         last_response = ""
